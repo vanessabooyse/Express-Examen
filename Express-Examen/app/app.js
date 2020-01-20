@@ -1,39 +1,52 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const express = require('express')
+const app = express()
+const MongoClient = require('mongodb').MongoClient
+const bodyParser = require('body-parser')
 
-var indexRouter = require('./routes/index');
+var db;
 
-var app = express();
+MongoClient.connect('mongodb://localhost:27017/exam', (err, database) => {
+  if (err) return console.log(err)
+  db = database.db('exam')
+  app.listen(3000, function(){
+  console.log('listening on port 3000')
+  })
+})
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+app.set('view engine', 'ejs')
+app.use(bodyParser.urlencoded({ extended: true }))
 
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+// Ga naar add 
+app.get('/', (req, res) => {
+  res.redirect('/add')
+})
 
-app.use('/', indexRouter);
+//add pagina
+// om producten toe te voegen Form /add (GET)
+app.get('/add', (req, res) => {
+  res.render('index.ejs', {})
+})
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
+// Stuur product naar database /add (POST)
+app.post('/add', (req, res) => {
+
+  db.collection('students').findOne({naam: req.body.naam}) 
+    .then(results => { //update products with results
+      console.log(results)
+        if (!results) {
+          db.collection('students').insertOne(req.body, (err, result) => {
+            if (err) return console.log(err)
+             res.redirect('/list')
+            })
+        } 
+    }); 
 });
 
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
-
-module.exports = app;
+// Lijst alle producten /list (GET)
+app.get('/list', (req, res) => {
+  db.collection('students').find().sort({"naam":1}).toArray((err, result) => {
+    if (err) return console.log(err)
+    res.render('list.ejs', { students: result })
+  })
+})
