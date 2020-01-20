@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta charset='UTF-8'>
+  <title>Studenten</title>
+  <link rel='stylesheet' href='css/bootstrap.min.css'>
+</head>
+<body>
+<div class='well'>
+  <h2>Voeg een student toe</h2>
+  <br/><br/>
+  <form action='/add' method='POST'>
+   <table>
+     <tr><td>Naam : </td><td><input type='text' name='naam'></td></tr>
+     <tr><td>Geboortedatum : </td><td><input type='text' name='geboortedatum' size=100></td></tr>
+     <tr><td>Studierichting : </td><td><input type='text' name='studierichting'></td></tr>
+     <tr><td><button type='submit'>Voeg toe</button></td></tr>
+   </table>
+  </form>
+  <br />
+
+  <a href='/list'>Lijst</a>
+
+</div>
+</body>
+</html>

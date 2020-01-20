@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta charset='UTF-8'>
+  <title>Students</title>
+  <link rel='stylesheet' href='css/bootstrap.min.css'>
+</head>
+<body>
+  <h1>All students</h1>
+ <br/><br/>
+  <ul class='student'>
+  <% for(var i=0; i < students.length; i++) {%>
+    <li class='student'>
+      <span><b>Naam : </b><%= students[i].naam %></span><br />
+      <span><b>Geboortedatum : </b><%= students[i].geboortedatum %></span><br />
+      <span><b>Studierichting : </b><%= students[i].studierichting %></span><br />
+    </li>
+  <% } %>
+  </ul>
+<br />
+
+<a href='/add'>Add product</a>
+
+</body>
+</html>
